@@ -1,0 +1,263 @@
+---
+title: "cind110_Assignment_03"
+author: "Ramello Peralta 500519802"
+Due: "December 11, 2020"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+Use RStudio for this assignment. 
+Edit the file `A3_F19_Q.Rmd` and insert your R code where wherever you see the string "#WRITE YOUR ANSWER HERE"
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+This assignment makes use of data that were adapted from:
+https://www.ted.com/talks
+
+
+#Install and load required packages
+```{r}
+#install.packages("tm")       #Please Install if required
+#install.packages("text2vec") #Please Install if required
+#install.packages("tokenizers") #Used for Q4
+library(tm)
+library(text2vec)
+
+```
+
+
+## Reading the Transcripts
+```{r}
+data <- read.csv(file = 'transcripts.csv', header = F, sep = '|')
+doc <- 0
+for (i in c(2:100)) {doc[i] <- as.character(data$V1[i])}
+doc.list <- as.list(doc[2:100])
+N.docs <- length(doc.list)
+names(doc.list) <- paste0("Doc", c(1:N.docs))
+Query <- as.character(data$V1[1])
+```
+
+## Preparing the Corpus
+```{r}
+my.docs <- VectorSource(c(doc.list, Query))
+my.docs$Names <- c(names(doc.list), "Query")
+my.corpus <- Corpus(my.docs)
+my.corpus
+```
+
+
+## Cleaning and Preprocessing the text (Cleansing Techniques)
+```{r}
+#Write your answer here fro Question 1
+#Hint: use getTransformations() function in tm Package
+getTransformations()
+my.corpus <- tm_map(my.corpus, removePunctuation)
+#removing punctuation helps identify base words
+my.corpus <- tm_map(my.corpus, stemDocument)
+#Stemming and/or lemmatization is necessary to find the base word. Removing prefixes/suffixes/inflections help understand the content of the message
+my.corpus <- tm_map(my.corpus, content_transformer(tolower))
+#lowercase transformation to remove all capitalization for case-sensitivity (just in case if the algorithm tokenizes a capitalized word and its lowercase equivalent as two separate terms)
+my.corpus <- tm_map(my.corpus, removeWords, stopwords("english"))
+#Stopword removal algorithm removes words that are common in english language as they are not substantive or are less relevant to the content of the message
+my.corpus <- tm_map(my.corpus, stripWhitespace)
+#Whitespace removal to trim any unnecessary indentations/paragraph spaces to better tokenize each word
+content(my.corpus[[1]])
+
+```
+
+##Creating a uni-gram Term Document Matrix
+```{r}
+term.doc.matrix <- TermDocumentMatrix(my.corpus)
+inspect(term.doc.matrix[1:10,1:10])
+```
+
+## Converting the generated TDM into a matrix and displaying the first 6 rows and the dimensions of the matrix
+```{r}
+term.doc.matrix <- as.matrix(term.doc.matrix)
+head(term.doc.matrix)
+dim(term.doc.matrix)
+```
+
+## Declaring weights (TF-IDF)
+```{r}
+get.tf.idf.weights <- function(tf.vec) {
+  # Computes the tfidf weights from the term frequency vector
+  n.docs <- length(tf.vec)
+  doc.frequency <- length(tf.vec[tf.vec > 0])
+  weights <- rep(0, length(tf.vec))
+  relative.frequency <- tf.vec[tf.vec > 0] / sum(tf.vec[tf.vec > 0])
+  weights[tf.vec > 0] <-  relative.frequency * log(n.docs/doc.frequency)
+  return(weights)
+}
+```
+
+## Declaring weights (TF-IDF variants)
+```{r}
+#Write your answer here for Question 3
+
+#First Variant: IDF = 1;
+get.tf.idf.weights1 <- function(tf.vec) {
+  # Computes the tfidf weights from the term frequency vector
+  n.docs <- length(tf.vec)
+  doc.frequency <- length(tf.vec[tf.vec > 0])
+  weights <- rep(0, length(tf.vec))
+  relative.frequency <- tf.vec[tf.vec > 0] / sum(tf.vec[tf.vec > 0])
+  weights[tf.vec > 0] <-  relative.frequency * 1
+  return(weights)
+}
+
+#Second Variant: TF_ij = 1+log(fij); IDF__i = log(1+N/ni)
+get.tf.idf.weights2 <- function(tf.vec) {
+  # Computes the tfidf weights from the term frequency vector
+  n.docs <- length(tf.vec)
+  doc.frequency <- length(tf.vec[tf.vec > 0])
+  weights <- rep(0, length(tf.vec))
+  relative.frequency <- 1 + log(tf.vec[tf.vec > 0])
+  weights[tf.vec > 0] <-  relative.frequency * log(1+(n.docs/doc.frequency))
+  return(weights)
+}
+
+#Third Variant: TF_ij = fij, IDF_i = log(N/ni)
+get.tf.idf.weights3 <- function(tf.vec) {
+  # Computes the tfidf weights from the term frequency vector
+  n.docs <- length(tf.vec)
+  doc.frequency <- length(tf.vec[tf.vec > 0])
+  weights <- rep(0, length(tf.vec))
+  relative.frequency <- tf.vec[tf.vec > 0] #raw count
+  weights[tf.vec > 0] <-  relative.frequency * log(n.docs/doc.frequency)
+  return(weights)
+}
+```
+
+###Computing Cosine Similarity and Displaying a heatmap
+```{r}
+#Original weighting
+tfidf.matrix <- t(apply(term.doc.matrix, 1,
+                        FUN = function(row) {get.tf.idf.weights(row)}))
+colnames(tfidf.matrix) <- my.docs$Names
+head(tfidf.matrix)
+dim(tfidf.matrix)
+similarity.matrix <- sim2(t(tfidf.matrix), method = 'cosine')
+heatmap(similarity.matrix)
+
+#First Variant
+tfidf.matrix1 <- t(apply(term.doc.matrix, 1,
+                        FUN = function(row) {get.tf.idf.weights1(row)}))
+colnames(tfidf.matrix1) <- my.docs$Names
+similarity.matrix1 <- sim2(t(tfidf.matrix1), method = 'cosine')
+heatmap(similarity.matrix1)
+
+#Second Variant
+tfidf.matrix2 <- t(apply(term.doc.matrix, 1,
+                        FUN = function(row) {get.tf.idf.weights2(row)}))
+colnames(tfidf.matrix2) <- my.docs$Names
+similarity.matrix2 <- sim2(t(tfidf.matrix2), method = 'cosine')
+heatmap(similarity.matrix2)
+
+#Third Variant
+tfidf.matrix3 <- t(apply(term.doc.matrix, 1,
+                        FUN = function(row) {get.tf.idf.weights3(row)}))
+colnames(tfidf.matrix3) <- my.docs$Names
+similarity.matrix3 <- sim2(t(tfidf.matrix3), method = 'cosine')
+heatmap(similarity.matrix3)
+
+```
+
+##Showing the Results
+```{r}
+#First 9 most similar documents + query
+sort(similarity.matrix["Query", ], decreasing = TRUE)[1:10] # original
+sort(similarity.matrix1["Query", ], decreasing = TRUE)[1:10] # first variant
+sort(similarity.matrix2["Query", ], decreasing = TRUE)[1:10] # second variant
+sort(similarity.matrix3["Query", ], decreasing = TRUE)[1:10] # third variant
+
+```
+
+## Use the following chunk to comment and conclude after conducting your comparative analyses
+```{r}
+
+results.df <- data.frame(doc = names(doc.list),text = unlist(doc.list))
+#print(results.df[99,]);print(Query) #Doc99 == Query, hence similarity of 1.0
+#print(results.df[58,])
+#print(results.df[47,])
+#print(results.df[2,])
+#print(results.df[3,])
+#print(results.df[1,]) 
+#all the top documents have similar topics as the query: data, data science, machine learning algorithms... so the vector space model is decently working in our case
+
+#It is possible to see visually in each heatmap above that there is not much variance between the original and first variant by looking at the uniformity of the base yellow color of the heatmap as well as the similarity in length of the dendrograms.
+#thus they lack discrimination power and may not be as effective as the next 2 variants in distinguishing relevant content 
+#The second and third variants used log normalization and raw count variants on TF respectively which seem to provide a better output as the differences in cosine similarity between these variants is more pronounced, thus we are able to see better the differences between each document.
+#The 2nd variant heatmap has a couple documents (25, 37, 99) showing higher similarity to nearly every other document in the list, which might mean the sensitivity of this 2nd variant model is too high. However I cannot conclude this without further analysis
+#The 3rd variant looks like it discriminates best the most similar documents
+```
+
+
+## Use the following chunk to answer Question 4
+```{r}
+#Upon first glance, I thought tokenizing every 2 words would distort the message and provide even less clarity. However upon analysis this is not true.
+library(tokenizers)
+my.corpus2 <- my.corpus
+my.corpus.bigram <- tm_map(my.corpus2, tokenize_ngrams, n=2)
+content(my.corpus.bigram[[1]])
+
+term.doc.matrix.bigram <- TermDocumentMatrix(my.corpus.bigram)
+inspect(term.doc.matrix.bigram[1:10,1:10])
+
+tfidf.matrix.bigram <- t(apply(term.doc.matrix.bigram, 1, FUN = function(row) {get.tf.idf.weights(row)}))
+tfidf.matrix.bigram1 <- t(apply(term.doc.matrix.bigram, 1, FUN = function(row) {get.tf.idf.weights1(row)}))
+tfidf.matrix.bigram2 <- t(apply(term.doc.matrix.bigram, 1, FUN = function(row) {get.tf.idf.weights2(row)}))
+tfidf.matrix.bigram3 <- t(apply(term.doc.matrix.bigram, 1, FUN = function(row) {get.tf.idf.weights3(row)}))
+
+colnames(tfidf.matrix.bigram) <- my.docs$Names
+colnames(tfidf.matrix.bigram1) <- my.docs$Names
+colnames(tfidf.matrix.bigram2) <- my.docs$Names
+colnames(tfidf.matrix.bigram3) <- my.docs$Names
+
+#head(tfidf.matrix.bigram)
+#dim(tfidf.matrix.bigram)
+
+similarity.matrix.bigram <- sim2(t(tfidf.matrix.bigram), method = 'cosine')
+similarity.matrix.bigram1 <- sim2(t(tfidf.matrix.bigram1), method = 'cosine')
+similarity.matrix.bigram2 <- sim2(t(tfidf.matrix.bigram2), method = 'cosine')
+similarity.matrix.bigram3 <- sim2(t(tfidf.matrix.bigram3), method = 'cosine')
+
+#The bigram heatmaps are almost identical to the unigram heatmaps
+heatmap(similarity.matrix.bigram)
+heatmap(similarity.matrix.bigram1)
+heatmap(similarity.matrix.bigram2)
+heatmap(similarity.matrix.bigram3)
+
+```
+
+
+```{r}
+#Bigram
+print("Bigram similarities")
+sort(similarity.matrix.bigram["Query", ], decreasing = TRUE)[1:10]
+sort(similarity.matrix.bigram1["Query", ], decreasing = TRUE)[1:10]
+sort(similarity.matrix.bigram2["Query", ], decreasing = TRUE)[1:10]
+sort(similarity.matrix.bigram3["Query", ], decreasing = TRUE)[1:10]
+
+print("Unigram similarities")
+#Unigram similarities from Q3 above
+sort(similarity.matrix["Query", ], decreasing = TRUE)[1:10]
+sort(similarity.matrix1["Query", ], decreasing = TRUE)[1:10] 
+sort(similarity.matrix2["Query", ], decreasing = TRUE)[1:10] 
+sort(similarity.matrix3["Query", ], decreasing = TRUE)[1:10] 
+
+#It seems from my results that unigram and bigram perform more or less the same. This may be due to each term in the unigram now having 2 forms in the bigram, which allows us to see the relationships between the words as well and may help us understand further the content of the message.
+```
+
+```
