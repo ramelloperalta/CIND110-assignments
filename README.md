@@ -11,7 +11,7 @@ Assignment 1 - Creating a database CompanyDB in MySQLWorkbench
 Assignment 2 - SQL Queries on a db server using R (RMySQL)
 - SQL Querying a database in R
 
-Assignment 3 - NLP in R
+Assignment 3 - NLP in R (tm, text2vec, tokenizers)
 - Retrieving transcripts from TedTalks into a corpus
 - TF-IDF variants
 - Similarity ranking using Cosine Similarity
