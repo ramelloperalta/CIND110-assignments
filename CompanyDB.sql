@@ -39,7 +39,10 @@ CREATE TABLE `DEPARTMENT` (
 
 LOCK TABLES `DEPARTMENT` WRITE;
 /*!40000 ALTER TABLE `DEPARTMENT` DISABLE KEYS */;
-INSERT INTO `DEPARTMENT` VALUES ('Headquarters',1,'333445555','1981-06-19'),('Marketing',2,'453453453','1988-05-22'),('Administration',4,'453453453','1995-01-01'),('Research',5,'808080808','2017-06-12');
+INSERT INTO `DEPARTMENT` VALUES ('Headquarters',1,'333445555','1981-06-19'),
+  ('Marketing',2,'453453453','1988-05-22'),
+  ('Administration',4,'453453453','1995-01-01'),
+  ('Research',5,'808080808','2017-06-12');
 /*!40000 ALTER TABLE `DEPARTMENT` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -65,7 +68,16 @@ CREATE TABLE `DEPENDENT` (
 
 LOCK TABLES `DEPENDENT` WRITE;
 /*!40000 ALTER TABLE `DEPENDENT` DISABLE KEYS */;
-INSERT INTO `DEPENDENT` VALUES ('123456789','Alice','F','1988-12-30','Daughter'),('123456789','Elizabeth','F','1967-05-05','Spouse'),('123456789','John','M','1988-02-28','Son'),('333445555','Alice','F','1986-04-05','Daughter'),('333445555','Joy','F','1958-05-03','Spouse'),('333445555','Theodore','M','1983-10-25','Son'),('453453453','Joyce','F','1990-04-05','Daughter'),('987654321','Andrew','M','1988-01-04','Son'),('987654321','Jennifer','F','1988-01-04','Daughter'),('987987987','Nabil','M','1999-08-05','Son');
+INSERT INTO `DEPENDENT` VALUES ('123456789','Alice','F','1988-12-30','Daughter'),
+  ('123456789','Elizabeth','F','1967-05-05','Spouse'),
+  ('123456789','John','M','1988-02-28','Son'),
+  ('333445555','Alice','F','1986-04-05','Daughter'),
+  ('333445555','Joy','F','1958-05-03','Spouse'),
+  ('333445555','Theodore','M','1983-10-25','Son'),
+  ('453453453','Joyce','F','1990-04-05','Daughter'),
+  ('987654321','Andrew','M','1988-01-04','Son'),
+  ('987654321','Jennifer','F','1988-01-04','Daughter'),
+  ('987987987','Nabil','M','1999-08-05','Son');
 /*!40000 ALTER TABLE `DEPENDENT` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,7 +130,16 @@ CREATE TABLE `EMPLOYEE` (
 
 LOCK TABLES `EMPLOYEE` WRITE;
 /*!40000 ALTER TABLE `EMPLOYEE` DISABLE KEYS */;
-INSERT INTO `EMPLOYEE` VALUES ('Susan','Westerberg','121231234','1960-01-01','1010 Rockspring, Houston, TX','F',75000,NULL,1),('Jack','English','123456789','1965-01-09','731 Fondren, Houston, TX','M',30000,'333445555',2),('Frank','Wong','333445555','1955-12-08','297Victoria, Toronto, ON','M',42000,'888665575',2),('Joanne','English','453453453','1972-07-31','5631 Rice, Houston, TX','F',25000,'333445555',2),('Rakesh','Narayan','666884444','1980-09-15','975 Fire Oak, Humble, TX','M',38000,'333445555',2),('Melinda','Jones','808080808','1970-07-10','1001 Western, Houston, TX','F',27500,'333445555',2),('John','Baines','888665575','1947-11-10','450 Stone, Houston, TX','M',60000,'121231234',1),('Janine','Wallace','987654321','1941-06-20','291 Berry, Bellaire, TX','F',49000,'888665575',4),('Ahmad','Jabbar','987987987','1969-03-29','980 Dallas, Houston, TX','M',33000,'987654321',4),('Amelia','English','999887777','1968-01-19','3321 Castle, Spring, TX','F',26000,'987654321',4);
+INSERT INTO `EMPLOYEE` VALUES ('Susan','Westerberg','121231234','1960-01-01','1010 Rockspring, Houston, TX','F',75000,NULL,1),
+  ('Jack','English','123456789','1965-01-09','731 Fondren, Houston, TX','M',30000,'333445555',2),
+  ('Frank','Wong','333445555','1955-12-08','297Victoria, Toronto, ON','M',42000,'888665575',2),
+  ('Joanne','English','453453453','1972-07-31','5631 Rice, Houston, TX','F',25000,'333445555',2),
+  ('Rakesh','Narayan','666884444','1980-09-15','975 Fire Oak, Humble, TX','M',38000,'333445555',2),
+  ('Melinda','Jones','808080808','1970-07-10','1001 Western, Houston, TX','F',27500,'333445555',2),
+  ('John','Baines','888665575','1947-11-10','450 Stone, Houston, TX','M',60000,'121231234',1),
+  ('Janine','Wallace','987654321','1941-06-20','291 Berry, Bellaire, TX','F',49000,'888665575',4),
+  ('Ahmad','Jabbar','987987987','1969-03-29','980 Dallas, Houston, TX','M',33000,'987654321',4),
+  ('Amelia','English','999887777','1968-01-19','3321 Castle, Spring, TX','F',26000,'987654321',4);
 /*!40000 ALTER TABLE `EMPLOYEE` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -142,7 +163,13 @@ CREATE TABLE `PROJECT` (
 
 LOCK TABLES `PROJECT` WRITE;
 /*!40000 ALTER TABLE `PROJECT` DISABLE KEYS */;
-INSERT INTO `PROJECT` VALUES ('ProductX',100,'Bellaire'),('ProductY',200,'Sugarland'),('ProductZ',300,'Houston'),('Computerization',400,'Stafford'),('Reorganization',500,'Houston'),('Newbenefits',600,'Stafford'),('ProjectW',700,'Toronto');
+INSERT INTO `PROJECT` VALUES ('ProductX',100,'Bellaire'),
+  ('ProductY',200,'Sugarland'),
+  ('ProductZ',300,'Houston'),
+  ('Computerization',400,'Stafford'),
+  ('Reorganization',500,'Houston'),
+  ('Newbenefits',600,'Stafford'),
+  ('ProjectW',700,'Toronto');
 /*!40000 ALTER TABLE `PROJECT` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -166,7 +193,24 @@ CREATE TABLE `WORKSON` (
 
 LOCK TABLES `WORKSON` WRITE;
 /*!40000 ALTER TABLE `WORKSON` DISABLE KEYS */;
-INSERT INTO `WORKSON` VALUES ('121231234',500,12.0),('123456789',100,20.0),('123456789',200,18.0),('333445555',100,10.0),('333445555',200,10.0),('333445555',300,15.0),('333445555',400,10.0),('333445555',500,20.0),('333445555',600,5.0),('453453453',100,32.0),('453453453',200,12.0),('888665575',500,12.0),('987654321',500,15.0),('987654321',600,20.0),('987987987',400,35.0),('987987987',600,5.0),('999887777',400,10.0),('999887777',600,20.0);
+INSERT INTO `WORKSON` VALUES ('121231234',500,12.0),
+  ('123456789',100,20.0),
+  ('123456789',200,18.0),
+  ('333445555',100,10.0),
+  ('333445555',200,10.0),
+  ('333445555',300,15.0),
+  ('333445555',400,10.0),
+  ('333445555',500,20.0),
+  ('333445555',600,5.0),
+  ('453453453',100,32.0),
+  ('453453453',200,12.0),
+  ('888665575',500,12.0),
+  ('987654321',500,15.0),
+  ('987654321',600,20.0),
+  ('987987987',400,35.0),
+  ('987987987',600,5.0),
+  ('999887777',400,10.0),
+  ('999887777',600,20.0);
 /*!40000 ALTER TABLE `WORKSON` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
