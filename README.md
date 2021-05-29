@@ -2,10 +2,28 @@
 Concepts: Database creation & management, Reverse/Forward Engineering datasets
 Languages: SQL
 
-Assignment 1 - Creating a database CompanyDB in MySQLWorkbench
+CompanyDB.sql assignment
+- Creating a database CompanyDB in MySQLWorkbench
 - Database creation & management
-- Schema assignment
+- Schema assignment, constraints
 - Creating EER Diagrams
 - Reverse/Forward Engineering datasets
-- Constraints, Primary Keys
-- Cardinality 
+
+719A1
+- Apache Hadoop and Apache Hive in Ubuntu environment
+- Loading data
+- Creating databases, tables
+- SQL Query in Hive
+- creating external tables
+
+719A2
+- Apache Spark
+- Creating and loading tables
+- SparkSQL Queries
+
+719A3
+- Apache Spark MLlib analytics
+- Data Pipelining
+- Logistic Regression on distributed data
+
+
