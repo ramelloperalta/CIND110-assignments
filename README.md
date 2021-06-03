@@ -26,4 +26,8 @@ CompanyDB.sql assignment
 - Data Pipelining
 - Logistic Regression on distributed data
 
-
+719FINAL report
+- Apache Spark Analytics (Logistic Regression, VectorAssembler)
+- Graph Mining
+- SparkSQL
+- Loading datasets
