@@ -14,7 +14,7 @@ CompanyDB.sql assignment
 - Loading data
 - Creating databases, tables
 - SQL Query in Hive
-- creating external tables
+- Creating external tables
 
 719A2
 - Apache Spark
@@ -27,11 +27,11 @@ CompanyDB.sql assignment
 - Logistic Regression on distributed data
 
 719MIDTERM
-- loading data into hadoop
+- Creating tables and loading data into hadoop
 - HiveQL
 
 719FINAL report
 - Apache Spark Analytics (Logistic Regression, VectorAssembler)
 - Graph Mining
 - SparkSQL
-- Loading datasets
+- Creating tables, Loading datasets
